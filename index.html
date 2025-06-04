@@ -269,7 +269,7 @@
             .attr('x', 0 - height / 2)
             .attr('dy', '1em')
             .style('text-anchor', 'middle')
-            .text('Total Sales ($)')
+            .text('Total de Ventas ($)')
 
           // Add X axis label
           svg
@@ -280,7 +280,7 @@
               `translate(${width / 2}, ${height + margin.bottom - 20})`
             )
             .style('text-anchor', 'middle')
-            .text('Product Category')
+            .text('Categoría de Producto')
 
           // Create bars
           svg
@@ -437,7 +437,7 @@
                 .attr('dy', '1em')
                 .style('text-anchor', 'middle')
                 .style('font-size', '18px')
-                .text('Total Sales ($)')
+                .text('Total de Ventas ($)')
 
               // Add X axis label
               lineSvg
@@ -451,7 +451,7 @@
                 )
                 .style('text-anchor', 'middle')
                 .style('font-size', '18px')
-                .text('Date')
+                .text('Fecha')
 
               // Add line path with animation
               const linePath = lineSvg
@@ -617,7 +617,7 @@
             .attr('y', legendY - 5)
             .style('font-size', '12px')
             .style('font-weight', 'bold')
-            .text('Sales')
+            .text('Ventas')
 
           // Create a projection and path generator
           const projection = d3
@@ -783,7 +783,7 @@
                 .html(
                   `
                 <strong>${d.data.country}</strong><br>
-                Total Sales: ${d.data.formattedSales}
+                Total de Ventas: ${d.data.formattedSales}
               `
                 )
                 .style('left', event.pageX + 10 + 'px')
@@ -956,7 +956,7 @@
             )
             .style('text-anchor', 'middle')
             .style('font-size', '18px')
-            .text('Total Sales ($)')
+            .text('Total de Ventas ($)')
 
           // Add bars
           topProductsSvg
@@ -978,7 +978,7 @@
                 .html(
                   `
                 <strong>${d.product}</strong><br>
-                Total Sales: ${d.formattedSales}
+                Total de Ventas: ${d.formattedSales}
               `
                 )
                 .style('left', event.pageX + 10 + 'px')
