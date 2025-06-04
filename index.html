@@ -707,7 +707,7 @@
             top: 20,
             right: 60,
             bottom: 80,
-            left: 100
+            left: 60
           }
           const topCountriesWidth =
             containerWidth - topCountriesMargin.left - topCountriesMargin.right
@@ -733,10 +733,7 @@
             .append('g')
             .attr(
               'transform',
-              `translate(${
-                topCountriesMargin.left +
-                (topCountriesWidth - topCountriesWidth) / 2
-              },${topCountriesMargin.top})`
+              `translate(${topCountriesMargin.left},${topCountriesMargin.top})`
             )
 
           // Create color scale
@@ -801,6 +798,10 @@
             .attr('y', 18)
             .attr('fill', '#fff')
             .attr('font-weight', 'bold')
+            .style('stroke', '#000')
+            .style('stroke-width', '0.8px')
+            .style('paint-order', 'stroke')
+            .style('font-size', '15px')
             .text((d) => d.data.country)
 
           cell
@@ -808,6 +809,9 @@
             .attr('x', 4)
             .attr('y', 36)
             .attr('fill', '#fff')
+            .style('stroke', '#000')
+            .style('stroke-width', '0.8px')
+            .style('paint-order', 'stroke')
             .text((d) => d3.format('.2s')(d.data.totalSales))
 
           // Add legend
