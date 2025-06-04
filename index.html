@@ -179,7 +179,7 @@
         .range(['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'])
 
       // Load and process the data
-      d3.csv('/data/sales.csv')
+      d3.csv('./data/sales.csv')
         .then((data) => {
           console.log('Sample data:', data.slice(0, 5))
 
@@ -353,7 +353,7 @@
             .style('opacity', 1)
 
           // Load and process the data for the line chart
-          d3.csv('/data/sales.csv')
+          d3.csv('./data/sales.csv')
             .then((data) => {
               // Parse the date and aggregate sales by month and year
               const parseDate = d3.timeParse('%Y-%m-%d')
@@ -515,7 +515,7 @@
 
       // Load and process the data for the map chart
       Promise.all([
-        d3.csv('/data/sales.csv'),
+        d3.csv('./data/sales.csv'),
         d3.json(
           'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson'
         )
@@ -677,7 +677,7 @@
         })
 
       // Create top 10 countries treemap
-      d3.csv('/data/sales.csv')
+      d3.csv('./data/sales.csv')
         .then((data) => {
           // Aggregate sales by country
           const salesByCountry = d3.rollup(
@@ -840,7 +840,7 @@
         })
 
       // Create top 10 products horizontal bar chart
-      d3.csv('/data/sales.csv')
+      d3.csv('./data/sales.csv')
         .then((data) => {
           // Aggregate sales by product
           const salesByProduct = d3.rollup(
