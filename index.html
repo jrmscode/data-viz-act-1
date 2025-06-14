@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,6 +13,7 @@
         padding: 20px;
         background-color: #f5f5f5;
       }
+
       .container {
         max-width: 60%;
         margin: 0 auto;
@@ -21,6 +22,7 @@
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
+
       .chart-title {
         font-size: 24px;
         font-weight: bold;
@@ -28,6 +30,7 @@
         margin-bottom: 30px;
         color: #333;
       }
+
       .tooltip {
         position: absolute;
         padding: 12px;
@@ -39,49 +42,28 @@
         transition: opacity 0.3s;
         font-size: 14px;
       }
+
       .bar {
         transition: all 0.3s ease;
       }
+
       .bar:hover {
         stroke: #333;
         stroke-width: 2;
       }
+
       .axis-label {
         font-size: 14px;
         font-weight: bold;
       }
+
       .grid-line {
         stroke: #e0e0e0;
         stroke-dasharray: 3, 3;
       }
-      .arc {
-        stroke: white;
-        stroke-width: 2;
-        transition: all 0.3s ease;
-      }
-      .arc:hover {
-        stroke-width: 3;
-        filter: brightness(1.1);
-      }
-      #center-text {
-        position: absolute;
-        text-align: center;
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
-        pointer-events: none;
-      }
-      .legend {
-        font-size: 12px;
-      }
-      .legend-item {
-        cursor: pointer;
-      }
-      .legend-item:hover {
-        opacity: 0.7;
-      }
     </style>
   </head>
+
   <body>
     <h1 class="text-4xl font-bold text-center mb-10">Actividad 1 - D3.js</h1>
     <div class="text-center mb-10">
@@ -97,7 +79,7 @@
         años (2011 - 2024).
       </p>
       <p>
-        En el siguiente repositorio hemos creado pequeño análisis sobre las
+        En el siguiente repositorio hemos creado un pequeño análisis sobre las
         columnas e información del dataset en formato de Jupyter Notebook.
       </p>
     </div>
@@ -105,11 +87,10 @@
     <div class="container">
       <div class="chart-title">Total de Ventas por Categoría de Producto</div>
       <p>
-        En la siguiente figura podemos encontrar una gráfica de barras que nos
-        muestra el total de ventas por cada categría del dataset. Como podemos
-        observar la categoría de Tecnología tuvo el mayor total de ventas, con
-        4.7 millones de dólares. La categoría de Hogar tuvo el menor total de
-        ventas, con 3.8 millones de dólares.
+        En la siguiente figura podemos encontrar una gráfica de barras que
+        muestra el total de ventas por cada categoría. Se observa que la
+        categoría de Tecnología tuvo el mayor total (4.7 millones de dólares) y
+        la de Hogar el menor (3.8 millones de dólares).
       </p>
       <div id="chart"></div>
       <div id="tooltip" class="tooltip"></div>
@@ -118,12 +99,9 @@
     <div class="container" style="margin-top: 30px">
       <div class="chart-title">Tendencia de Ventas a lo Largo del Tiempo</div>
       <p>
-        En la siguiente figura podemos encontrar una gráfica de línea en la cual
-        nos muestra la tendencia de las ventas a lo largo del tiempo. Como
-        podemos observar, las ventas han aumentado a lo largo del tiempo, pero
-        es necesario observar las que en los meses de Enero, Febero y Julio las
-        ventas presentan una caída. Pero la tendencia general en los últimos
-        tres años es que las ventas han ido a la alza.
+        La gráfica de línea muestra la evolución de las ventas a lo largo del
+        tiempo. Se observa una tendencia al alza, con caídas puntuales en meses
+        como enero, febrero y julio.
       </p>
       <div id="line-chart"></div>
     </div>
@@ -172,33 +150,31 @@
     </div>
 
     <script>
-      // Set up dimensions and margins
+      // ================================
+      // Configuración general y definición del tooltip
+      // ================================
       const margin = { top: 20, right: 60, bottom: 80, left: 100 }
       const containerWidth = document.querySelector('.container').clientWidth
       const width = containerWidth - margin.left - margin.right
       const height = 500 - margin.top - margin.bottom
-
-      // Create tooltip
       const tooltip = d3.select('#tooltip')
 
-      // Color scale for categories
-      const colorScale = d3
+      // Escala ordinal (para barras, treemap, etc.)
+      const colorScaleOrdinal = d3
         .scaleOrdinal()
         .range(['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'])
 
-      // Load and process the data
+      // -------------------------------
+      // Cargar el CSV y generar gráficos (excepto el mapa)
+      // -------------------------------
       d3.csv('./data/sales.csv')
         .then((data) => {
-          console.log('Sample data:', data.slice(0, 5))
-
-          // Process data to get total sales by category
+          // A) Gráfico de Barras: Total de Ventas por Categoría
           const categoryData = d3.rollup(
             data,
-            (v) => d3.sum(v, (d) => +d.sales), // Sum sales for each category
+            (v) => d3.sum(v, (d) => +d.sales),
             (d) => d.category
           )
-
-          // Convert to array and sort by sales
           const chartData = Array.from(
             categoryData,
             ([category, totalSales]) => ({
@@ -212,9 +188,6 @@
             })
           ).sort((a, b) => b.totalSales - a.totalSales)
 
-          console.log('Processed data:', chartData)
-
-          // Create SVG container
           const svg = d3
             .select('#chart')
             .append('svg')
@@ -223,19 +196,17 @@
             .append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`)
 
-          // Create scales
           const xScale = d3
             .scaleBand()
             .range([0, width])
             .domain(chartData.map((d) => d.category))
             .padding(0.2)
-
           const yScale = d3
             .scaleLinear()
             .range([height, 0])
             .domain([0, d3.max(chartData, (d) => d.totalSales)])
 
-          // Add grid lines
+          // Líneas de cuadrícula
           svg
             .selectAll('.grid-line')
             .data(yScale.ticks(5))
@@ -247,7 +218,7 @@
             .attr('y1', (d) => yScale(d))
             .attr('y2', (d) => yScale(d))
 
-          // Add X axis
+          // Eje X
           svg
             .append('g')
             .attr('transform', `translate(0,${height})`)
@@ -256,7 +227,7 @@
             .style('font-size', '12px')
             .style('font-weight', 'bold')
 
-          // Add Y axis
+          // Eje Y
           svg
             .append('g')
             .call(
@@ -268,7 +239,7 @@
             .selectAll('text')
             .style('font-size', '12px')
 
-          // Add Y axis label
+          // Etiquetas de eje
           svg
             .append('text')
             .attr('class', 'axis-label')
@@ -279,7 +250,6 @@
             .style('text-anchor', 'middle')
             .text('Total de Ventas ($)')
 
-          // Add X axis label
           svg
             .append('text')
             .attr('class', 'axis-label')
@@ -290,7 +260,7 @@
             .style('text-anchor', 'middle')
             .text('Categoría de Producto')
 
-          // Create bars
+          // Crear barras
           svg
             .selectAll('.bar')
             .data(chartData)
@@ -299,39 +269,31 @@
             .attr('class', 'bar')
             .attr('x', (d) => xScale(d.category))
             .attr('width', xScale.bandwidth())
-            .attr('y', height) // Start from bottom for animation
-            .attr('height', 0) // Start with 0 height for animation
-            .attr('fill', (d, i) => colorScale(i))
-            .attr('rx', 4) // Rounded corners
+            .attr('y', height) // Para animación (desde abajo)
+            .attr('height', 0) // Inicia en 0 para animar
+            .attr('fill', (d, i) => colorScaleOrdinal(i))
+            .attr('rx', 4)
             .on('mouseover', function (event, d) {
-              // Highlight the bar
               d3.select(this).transition().duration(200).attr('opacity', 0.8)
-
-              // Show tooltip
               tooltip
                 .style('opacity', 1)
                 .html(
-                  `
-                <strong>${d.category}</strong><br>
-                Total Sales: ${d.formattedSales}<br>
-                Percentage: ${(
-                  (d.totalSales / d3.sum(chartData, (d) => d.totalSales)) *
-                  100
-                ).toFixed(1)}%
-              `
+                  `<strong>${d.category}</strong><br>
+                         Total Sales: ${d.formattedSales}<br>
+                         Percentage: ${(
+                           (d.totalSales /
+                             d3.sum(chartData, (d) => d.totalSales)) *
+                           100
+                         ).toFixed(1)}%`
                 )
                 .style('left', event.pageX + 10 + 'px')
                 .style('top', event.pageY - 10 + 'px')
             })
             .on('mouseout', function () {
-              // Reset bar opacity
               d3.select(this).transition().duration(200).attr('opacity', 1)
-
-              // Hide tooltip
               tooltip.style('opacity', 0)
             })
 
-          // Animate bars
           svg
             .selectAll('.bar')
             .transition()
@@ -340,7 +302,6 @@
             .attr('y', (d) => yScale(d.totalSales))
             .attr('height', (d) => height - yScale(d.totalSales))
 
-          // Add value labels on top of bars
           svg
             .selectAll('.value-label')
             .data(chartData)
@@ -360,202 +321,176 @@
             .delay((d, i) => i * 200 + 500)
             .style('opacity', 1)
 
-          // Load and process the data for the line chart
-          d3.csv('./data/sales.csv')
-            .then((data) => {
-              // Parse the date and aggregate sales by month and year
-              const parseDate = d3.timeParse('%Y-%m-%d')
-              const salesByMonth = d3.rollup(
-                data,
-                (v) => d3.sum(v, (d) => +d.sales),
-                (d) => {
-                  const date = parseDate(d.order_date)
-                  return d3.timeMonth(date) // Group by month
-                }
-              )
-
-              // Convert to array and sort by date
-              const salesData = Array.from(
-                salesByMonth,
-                ([date, totalSales]) => ({
-                  date,
-                  totalSales
-                })
-              ).sort((a, b) => a.date - b.date)
-
-              // Set up dimensions and margins for the line chart
-              const lineMargin = { top: 20, right: 60, bottom: 80, left: 100 }
-              const lineWidth =
-                containerWidth - lineMargin.left - lineMargin.right
-              const lineHeight = 500 - lineMargin.top - lineMargin.bottom
-
-              // Create SVG container for the line chart
-              const lineSvg = d3
-                .select('#line-chart')
-                .append('svg')
-                .attr('width', lineWidth + lineMargin.left + lineMargin.right)
-                .attr('height', lineHeight + lineMargin.top + lineMargin.bottom)
-                .append('g')
-                .attr(
-                  'transform',
-                  `translate(${lineMargin.left},${lineMargin.top})`
-                )
-
-              // Create scales
-              const xLineScale = d3
-                .scaleTime()
-                .domain(d3.extent(salesData, (d) => d.date))
-                .range([0, lineWidth])
-
-              const yLineScale = d3
-                .scaleLinear()
-                .domain([0, d3.max(salesData, (d) => d.totalSales)])
-                .range([lineHeight, 0])
-
-              // Add X axis
-              lineSvg
-                .append('g')
-                .attr('transform', `translate(0,${lineHeight})`)
-                .call(
-                  d3
-                    .axisBottom(xLineScale)
-                    .ticks(d3.timeMonth.every(1))
-                    .tickFormat(d3.timeFormat('%b %Y'))
-                )
-                .selectAll('text')
-                .style('text-anchor', 'end')
-                .attr('dx', '-.8em')
-                .attr('dy', '.15em')
-                .attr('transform', 'rotate(-65)')
-
-              // Add Y axis
-              lineSvg
-                .append('g')
-                .call(
-                  d3.axisLeft(yLineScale).ticks(5).tickFormat(d3.format('.2s'))
-                )
-
-              // Add Y axis label
-              lineSvg
-                .append('text')
-                .attr('class', 'axis-label')
-                .attr('transform', 'rotate(-90)')
-                .attr('y', 0 - lineMargin.left)
-                .attr('x', 0 - lineHeight / 2)
-                .attr('dy', '1em')
-                .style('text-anchor', 'middle')
-                .style('font-size', '18px')
-                .text('Total de Ventas ($)')
-
-              // Add X axis label
-              lineSvg
-                .append('text')
-                .attr('class', 'axis-label')
-                .attr(
-                  'transform',
-                  `translate(${lineWidth / 2}, ${
-                    lineHeight + lineMargin.bottom - 5
-                  })`
-                )
-                .style('text-anchor', 'middle')
-                .style('font-size', '18px')
-                .text('Fecha')
-
-              // Add line path with animation
-              const linePath = lineSvg
-                .append('path')
-                .datum(salesData)
-                .attr('fill', 'none')
-                .attr('stroke', '#FF6B6B')
-                .attr('stroke-width', 2)
-                .attr(
-                  'd',
-                  d3
-                    .line()
-                    .x((d) => xLineScale(d.date))
-                    .y((d) => yLineScale(d.totalSales))
-                )
-                .attr('stroke-dasharray', function () {
-                  const totalLength = this.getTotalLength()
-                  return totalLength + ' ' + totalLength
-                })
-                .attr('stroke-dashoffset', function () {
-                  return this.getTotalLength()
-                })
-                .transition()
-                .duration(4000)
-                .ease(d3.easeLinear)
-                .attr('stroke-dashoffset', 0)
-
-              // Add points
-              lineSvg
-                .selectAll('.dot')
-                .data(salesData)
-                .enter()
-                .append('circle')
-                .attr('class', 'dot')
-                .attr('cx', (d) => xLineScale(d.date))
-                .attr('cy', (d) => yLineScale(d.totalSales))
-                .attr('r', 3)
-                .attr('fill', '#FF6B6B')
-                .on('mouseover', function (event, d) {
-                  tooltip
-                    .style('opacity', 1)
-                    .html(
-                      `Date: ${d3.timeFormat('%B %Y')(
-                        d.date
-                      )}<br>Sales: ${d3.format('$,.2f')(d.totalSales)}`
-                    )
-                    .style('left', event.pageX + 10 + 'px')
-                    .style('top', event.pageY - 10 + 'px')
-                })
-                .on('mouseout', function () {
-                  tooltip.style('opacity', 0)
-                })
+          // B) Gráfico de Línea: Tendencia de Ventas en el Tiempo
+          const parseDate = d3.timeParse('%Y-%m-%d')
+          const salesByMonth = d3.rollup(
+            data,
+            (v) => d3.sum(v, (d) => +d.sales),
+            (d) => {
+              const date = parseDate(d.order_date)
+              return d3.timeMonth(date)
+            }
+          )
+          const salesTimeData = Array.from(
+            salesByMonth,
+            ([date, totalSales]) => ({
+              date,
+              totalSales
             })
-            .catch((error) => {
-              console.error('Error loading the data:', error)
-            })
-        })
-        .catch((error) => {
-          console.error('Error loading the data:', error)
-        })
+          ).sort((a, b) => a.date - b.date)
 
-      // Load and process the data for the map chart
-      Promise.all([
-        d3.csv('./data/sales.csv'),
-        d3.json(
-          'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson'
-        )
-      ])
+          const lineMargin = { top: 20, right: 60, bottom: 80, left: 100 }
+          const lineWidth = containerWidth - lineMargin.left - lineMargin.right
+          const lineHeight = 500 - lineMargin.top - lineMargin.bottom
+
+          const lineSvg = d3
+            .select('#line-chart')
+            .append('svg')
+            .attr('width', lineWidth + lineMargin.left + lineMargin.right)
+            .attr('height', lineHeight + lineMargin.top + lineMargin.bottom)
+            .append('g')
+            .attr(
+              'transform',
+              `translate(${lineMargin.left},${lineMargin.top})`
+            )
+
+          const xLineScale = d3
+            .scaleTime()
+            .domain(d3.extent(salesTimeData, (d) => d.date))
+            .range([0, lineWidth])
+          const yLineScale = d3
+            .scaleLinear()
+            .domain([0, d3.max(salesTimeData, (d) => d.totalSales)])
+            .range([lineHeight, 0])
+
+          lineSvg
+            .append('g')
+            .attr('transform', `translate(0,${lineHeight})`)
+            .call(
+              d3
+                .axisBottom(xLineScale)
+                .ticks(d3.timeMonth.every(1))
+                .tickFormat(d3.timeFormat('%b %Y'))
+            )
+            .selectAll('text')
+            .style('text-anchor', 'end')
+            .attr('dx', '-.8em')
+            .attr('dy', '.15em')
+            .attr('transform', 'rotate(-65)')
+
+          lineSvg
+            .append('g')
+            .call(d3.axisLeft(yLineScale).ticks(5).tickFormat(d3.format('.2s')))
+
+          lineSvg
+            .append('text')
+            .attr('class', 'axis-label')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 0 - lineMargin.left)
+            .attr('x', 0 - lineHeight / 2)
+            .attr('dy', '1em')
+            .style('text-anchor', 'middle')
+            .style('font-size', '18px')
+            .text('Total de Ventas ($)')
+
+          lineSvg
+            .append('text')
+            .attr('class', 'axis-label')
+            .attr(
+              'transform',
+              `translate(${lineWidth / 2}, ${
+                lineHeight + lineMargin.bottom - 5
+              })`
+            )
+            .style('text-anchor', 'middle')
+            .style('font-size', '18px')
+            .text('Fecha')
+
+          const linePath = lineSvg
+            .append('path')
+            .datum(salesTimeData)
+            .attr('fill', 'none')
+            .attr('stroke', '#FF6B6B')
+            .attr('stroke-width', 2)
+            .attr(
+              'd',
+              d3
+                .line()
+                .x((d) => xLineScale(d.date))
+                .y((d) => yLineScale(d.totalSales))
+            )
+            .attr('stroke-dasharray', function () {
+              const totalLength = this.getTotalLength()
+              return totalLength + ' ' + totalLength
+            })
+            .attr('stroke-dashoffset', function () {
+              return this.getTotalLength()
+            })
+            .transition()
+            .duration(4000)
+            .ease(d3.easeLinear)
+            .attr('stroke-dashoffset', 0)
+
+          lineSvg
+            .selectAll('.dot')
+            .data(salesTimeData)
+            .enter()
+            .append('circle')
+            .attr('class', 'dot')
+            .attr('cx', (d) => xLineScale(d.date))
+            .attr('cy', (d) => yLineScale(d.totalSales))
+            .attr('r', 3)
+            .attr('fill', '#FF6B6B')
+            .on('mouseover', function (event, d) {
+              tooltip
+                .style('opacity', 1)
+                .html(
+                  `Date: ${d3.timeFormat('%B %Y')(d.date)}<br>
+                             Sales: ${d3.format('$,.2f')(d.totalSales)}`
+                )
+                .style('left', event.pageX + 10 + 'px')
+                .style('top', event.pageY - 10 + 'px')
+            })
+            .on('mouseout', function () {
+              tooltip.style('opacity', 0)
+            })
+
+          // (Aquí podrías incluir otras visualizaciones que también trabajen solo con el CSV,
+          // como el treemap o el gráfico horizontal de productos)
+
+          // -------------------------------
+          // Al finalizar el procesamiento del CSV, encadenamos la carga del GeoJSON para el mapa
+          // Se devuelve el CSV (ya procesado) como Promise.resolve y se carga el GeoJSON
+          return Promise.all([
+            Promise.resolve(data),
+            d3.json(
+              'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson'
+            )
+          ])
+        })
         .then(([data, world]) => {
-          // Aggregate sales by country
+          // C) Mapa: Total de Ventas por País
+          // Agrupar las ventas por país usando los datos ya cargados
           const salesByCountry = d3.rollup(
             data,
             (v) => d3.sum(v, (d) => +d.sales),
             (d) => d.country
           )
-
-          // Convert to array
           const salesData = Array.from(
             salesByCountry,
-            ([country, totalSales]) => ({
-              country,
-              totalSales
-            })
+            ([country, totalSales]) => ({ country, totalSales })
           )
 
-          // Create a color scale
-          const colorScale = d3
+          // Usamos una escala secuencial para mapear de 0 al máximo de ventas
+          const maxSalesMap = d3.max(salesData, (d) => d.totalSales)
+          const mapColorScale = d3
             .scaleSequential(d3.interpolateBlues)
-            .domain([0, d3.max(salesData, (d) => d.totalSales)])
+            .domain([0, maxSalesMap])
 
-          // Set up dimensions and margins for the map chart
           const mapMargin = { top: 20, right: 60, bottom: 80, left: 100 }
           const mapWidth = containerWidth - mapMargin.left - mapMargin.right
           const mapHeight = 500 - mapMargin.top - mapMargin.bottom
 
-          // Create SVG container for the map chart
           const mapSvg = d3
             .select('#map-chart')
             .append('svg')
@@ -564,13 +499,11 @@
             .append('g')
             .attr('transform', `translate(${mapMargin.left},${mapMargin.top})`)
 
-          // Add legend
-          const legendHeight = 150
-          const legendWidth = 20
+          // Leyenda para el mapa
+          const legendHeight = 150,
+            legendWidth = 20,
+            legendY = 20
           const legendX = mapWidth - 40
-          const legendY = 20
-
-          // Create gradient for legend
           const gradient = mapSvg
             .append('defs')
             .append('linearGradient')
@@ -579,17 +512,12 @@
             .attr('y1', '0%')
             .attr('x2', '0%')
             .attr('y2', '100%')
-
-          // Add gradient stops
-          const stops = [0, 0.25, 0.5, 0.75, 1]
-          stops.forEach((stop, i) => {
+          ;[0, 0.25, 0.5, 0.75, 1].forEach((stop) => {
             gradient
               .append('stop')
               .attr('offset', `${stop * 100}%`)
               .attr('stop-color', d3.interpolateBlues(1 - stop))
           })
-
-          // Add legend rectangle
           mapSvg
             .append('rect')
             .attr('x', legendX)
@@ -599,26 +527,20 @@
             .style('fill', 'url(#colorGradient)')
             .style('stroke', '#333')
             .style('stroke-width', 1)
-
-          // Add legend labels
           const legendScale = d3
             .scaleLinear()
-            .domain([0, d3.max(salesData, (d) => d.totalSales)])
+            .domain([0, maxSalesMap])
             .range([legendHeight, 0])
-
           const legendAxis = d3
             .axisRight(legendScale)
             .ticks(5)
             .tickFormat(d3.format('$.2s'))
-
           mapSvg
             .append('g')
             .attr('transform', `translate(${legendX + legendWidth},${legendY})`)
             .call(legendAxis)
             .selectAll('text')
             .style('font-size', '10px')
-
-          // Add legend title
           mapSvg
             .append('text')
             .attr('x', legendX)
@@ -627,25 +549,23 @@
             .style('font-weight', 'bold')
             .text('Ventas')
 
-          // Create a projection and path generator
+          // Proyección y generación del path
           const projection = d3
             .geoMercator()
             .scale(100)
             .translate([mapWidth / 2, mapHeight / 1.5])
-
           const path = d3.geoPath().projection(projection)
 
-          // Add zoom behavior
+          // Agregar comportamiento de zoom
           const zoom = d3
             .zoom()
             .scaleExtent([1, 8])
             .on('zoom', (event) => {
               mapSvg.selectAll('path').attr('transform', event.transform)
             })
-
           d3.select('#map-chart svg').call(zoom)
 
-          // Draw the map
+          // Dibujar el mapa
           mapSvg
             .selectAll('path')
             .data(world.features)
@@ -656,7 +576,9 @@
               const countryData = salesData.find(
                 (c) => c.country === d.properties.name
               )
-              return countryData ? colorScale(countryData.totalSales) : '#ccc'
+              return countryData
+                ? mapColorScale(countryData.totalSales)
+                : '#ccc'
             })
             .style('stroke', '#333')
             .style('stroke-width', 0.5)
@@ -667,11 +589,12 @@
               tooltip
                 .style('opacity', 1)
                 .html(
-                  `Country: ${d.properties.name}<br>Sales: ${
-                    countryData
-                      ? d3.format('$,.2f')(countryData.totalSales)
-                      : 'No data'
-                  }`
+                  `Country: ${d.properties.name}<br>
+                            Sales: ${
+                              countryData
+                                ? d3.format('$,.2f')(countryData.totalSales)
+                                : 'No data'
+                            }`
                 )
                 .style('left', event.pageX + 10 + 'px')
                 .style('top', event.pageY - 10 + 'px')
@@ -679,20 +602,6 @@
             .on('mouseout', function () {
               tooltip.style('opacity', 0)
             })
-        })
-        .catch((error) => {
-          console.error('Error loading the data:', error)
-        })
-
-      // Create top 10 countries treemap
-      d3.csv('./data/sales.csv')
-        .then((data) => {
-          // Aggregate sales by country
-          const salesByCountry = d3.rollup(
-            data,
-            (v) => d3.sum(v, (d) => +d.sales),
-            (d) => d.country
-          )
 
           // Convert to array and sort by sales
           const topCountriesData = Array.from(
@@ -822,22 +731,6 @@
             .style('paint-order', 'stroke')
             .text((d) => d3.format('.2s')(d.data.totalSales))
 
-          // Add legend
-          const legendHeight = 150
-          const legendWidth = 20
-          const legendX = topCountriesWidth - 40
-          const legendY = 20
-
-          // Create gradient for legend
-          const gradient = topCountriesSvg
-            .append('defs')
-            .append('linearGradient')
-            .attr('id', 'treemapGradient')
-            .attr('x1', '0%')
-            .attr('y1', '0%')
-            .attr('x2', '0%')
-            .attr('y2', '100%')
-
           // Add gradient stops
           const stops = [0, 0.25, 0.5, 0.75, 1]
           stops.forEach((stop, i) => {
@@ -846,15 +739,7 @@
               .attr('offset', `${stop * 100}%`)
               .attr('stop-color', d3.interpolateReds(stop))
           })
-        })
-        .catch((error) => {
-          console.error('Error loading the data:', error)
-        })
 
-      // Create top 10 products horizontal bar chart
-      d3.csv('./data/sales.csv')
-        .then((data) => {
-          // Aggregate sales by product
           const salesByProduct = d3.rollup(
             data,
             (v) => d3.sum(v, (d) => +d.sales),
@@ -1040,9 +925,11 @@
             .attr('x2', (d) => xScale(d))
             .attr('y1', 0)
             .attr('y2', topProductsHeight)
+
+          console.log('Gráficos generados correctamente')
         })
         .catch((error) => {
-          console.error('Error loading the data:', error)
+          console.error('Error loading CSV:', error)
         })
     </script>
   </body>
