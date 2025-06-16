@@ -118,6 +118,11 @@
         target="_blank">siguiente dataset</a>, que contiene información sobre ventas de una empresa durante 3 años (2011
       - 2014). </p>
     <p>En el siguiente repositorio hemos creado un pequeño análisis en formato de Jupyter Notebook.</p>
+    <p>
+      Puedes dar click
+      <a href="grid.html" style="color: cadetblue" target="_blank">aquí</a>
+      para visualizar un Dashboard.
+    </p>
   </div>
   <section aria-labelledby="chart1-title">
     <header>
@@ -126,9 +131,10 @@
     <p>En la siguiente figura podemos encontrar una gráfica de barras que muestra el total de ventas por cada categoría.
       Se observa que la categoría de Tecnología tuvo el mayor total (4.7 millones de dólares) y la de material de
       oficina el menor (3.8 millones de dólares).</p>
-    <div class="chart-container"> <svg id="bar-chart" role="img"
-        aria-label="Gráfica de barras que muestra ventas por categoría" viewBox="0 0 600 400"
-        preserveAspectRatio="xMidYMid meet"></svg> </div>
+    <div class="chart-container">
+      <svg id="bar-chart" role="img" aria-label="Gráfica de barras que muestra ventas por categoría"
+        viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
   </section>
   <section aria-labelledby="chart2-title">
     <header>
@@ -136,9 +142,10 @@
     </header>
     <p>La gráfica de línea muestra la evolución de las ventas a lo largo del tiempo. Se observa una tendencia al alza,
       con caídas puntuales en meses como enero, febrero y julio. </p>
-    <div class="chart-container"> <svg id="line-chart" role="img"
-        aria-label="Gráfica de línea sobre evolución de ventas" viewBox="0 0 600 400"
-        preserveAspectRatio="xMidYMid meet"></svg> </div>
+    <div class="chart-container">
+      <svg id="line-chart" role="img" aria-label="Gráfica de línea sobre evolución de ventas" viewBox="0 0 600 400"
+        preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
   </section>
   <section aria-labelledby="chart3-title">
     <header>
@@ -148,30 +155,35 @@
       país. Como podemos observar, los países con mayor total de ventas son Estados Unidos, Australia y Francia.</p>
     <p>La función de zoom está activa en esta gráfica para que el usuario pueda acceder al total de ventas de países mas
       pequeños.</p>
-    <div class="chart-container"> <svg id="map-chart" role="img"
-        aria-label="Gráfica de mapa con total de ventas por país" viewBox="0 0 600 400"
-        preserveAspectRatio="xMidYMid meet"></svg> </div>
+    <div class="chart-container">
+      <svg id="map-chart" role="img" aria-label="Gráfica de mapa con total de ventas por país" viewBox="0 0 600 400"
+        preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
   </section>
   <section aria-labelledby="chart4-title">
     <header>
       <h2 id="chart4-title">Top 10 Países con Mayor Total de Ventas</h2>
     </header>
-    <p>En la siguiente figura podemos encontrar una gráfica de barras horizontales que nos muestra los 10 productos con
-      mayor total de ventas. El largo de cada barra representa el total de ventas de cada producto. Esta visualización
-      nos permite comparar fácilmente el rendimiento de los productos más vendidos. Como se puede observar, el producto
-      mas vendido es el Apple Smart Phone con casi 87 mil dólares de venta.</p>
-    <div class="chart-container"> <svg id="top-countries-chart" role="img"
-        aria-label="Treemap de países con mayores ventas" viewBox="0 0 600 400"
-        preserveAspectRatio="xMidYMid meet"></svg> </div>
+    <p>En la siguiente figura podemos encontrar una gráfica de treemap que nos muestra los 10 países con mayor total de
+      ventas. El tamaño de cada rectángulo representa el total de ventas de cada país. Como podemos observar, Estados
+      Unidos lidera con el mayor total de ventas, seguido por Austrialia y Francia.</p>
+    <div class="chart-container">
+      <svg id="top-countries-chart" role="img" aria-label="Treemap de países con mayores ventas" viewBox="0 0 600 400"
+        preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
   </section>
   <section aria-labelledby="chart5-title">
     <header>
       <h2 id="chart5-title">Top 10 Productos Más Vendidos</h2>
     </header>
-    <p>Gráfica de barras horizontales que compara las ventas de los 10 productos más vendidos.</p>
-    <div class="chart-container"> <svg id="top-products-chart" role="img"
-        aria-label="Barras horizontales de productos más vendidos" viewBox="0 0 600 400"
-        preserveAspectRatio="xMidYMid meet"></svg> </div>
+    <p>En la siguiente figura podemos encontrar una gráfica de barras horizontales que nos muestra los 10 productos con
+      mayor total de ventas. El largo de cada barra representa el total de ventas de cada producto. Esta visualización
+      nos permite comparar fácilmente el rendimiento de los productos más vendidos. Como se puede observar, el producto
+      mas vendido es el Apple Smart Phone con casi 87 mil dólares de venta.</p>
+    <div class="chart-container">
+      <svg id="top-products-chart" role="img" aria-label="Barras horizontales de productos más vendidos"
+        viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
   </section>
   <div id="tooltip" class="tooltip"></div>
   <script src="index.js"></script>
